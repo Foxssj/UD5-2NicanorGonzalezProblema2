@@ -15,15 +15,23 @@ public class VeredaGT implements Vehicle{
 
         * */
 
-        public String matricula;
-        public final int MAX_ENERGY = 255;
-        public float energy;
-        public int movementCount = 0;
-        public int energyDelta;
+        private String matricula;
+        private final int MAX_ENERGY = 255;
+        private float energy;
+        private int movementCount = 0;
+        private float energyDelta;
 
-        public VeredaGT(String matricula, int energyDelta) {
-                this.matricula = matricula;
-                this.energyDelta = energyDelta;
+        public VeredaGT(String matricula, float energyDelta) {
+                if (matricula.length() == 7) {
+                        this.matricula = matricula;
+                } else {
+                        this.matricula = "1A2B3C4";
+                }
+                if (energyDelta < 255 || energyDelta > 1) {
+                        this.energyDelta = energyDelta;
+                } else {
+                        this.energyDelta = 15;
+                }
         }
 
         public String getMatricula() {
@@ -54,11 +62,11 @@ public class VeredaGT implements Vehicle{
                 return movementCount;
         }
 
-        public void setEnergyDelta(int energyDelta) {
+        public void setEnergyDelta(float energyDelta) {
                 this.energyDelta = energyDelta;
         }
 
-        public int getEnergyDelta() {
+        public float getEnergyDelta() {
                 return energyDelta;
         }
 
@@ -80,25 +88,32 @@ public class VeredaGT implements Vehicle{
 
         @Override
         public float energyLevel() {
-                return energy;
+                return getEnergy();
         }
 
         @Override
         public void recharge() {
-                setEnergy(MAX_ENERGY);
-
+                if (energy < MAX_ENERGY) {
+                        setEnergy(MAX_ENERGY);
+                } else {
+                        System.out.println("La energía ya está al máximo");
+                }
         }
 
         @Override
         public void move() {
-                setEnergy(energy - energyDelta);
-                movementCount++;
+                if (energy >= 15) {
+                        setEnergy(energy - energyDelta);
+                        movementCount++;
+                } else {
+                        System.out.println("El vehiculo no tiene suficiente energía");
+                }
         }
 
         @Override
         public String status() {
-                String out = "El vehículo" + matricula + "tiene un nivel de carga de:" +
-                        energyLevel() + "y se ha movido" + movementCount + "veces.";
-                return null;
+                String out = "El vehículo " + matricula + " tiene un nivel de carga de: " +
+                        energyLevel() + " y se ha movido " + movementCount + " veces.";
+                return out;
         }
 }
